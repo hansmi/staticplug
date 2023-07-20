@@ -60,6 +60,10 @@ func (r *Registry) Register(p Plugin) error {
 	r.byName[info.Name] = rp
 
 	slices.SortStableFunc(r.plugins, func(a, b *registeredPlugin) bool {
+		if a.info.Priority != b.info.Priority {
+			return a.info.Priority < b.info.Priority
+		}
+
 		return a.info.Name < b.info.Name
 	})
 

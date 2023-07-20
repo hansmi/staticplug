@@ -8,7 +8,11 @@ type Plugin interface {
 
 // PluginInfo represents a registered plugin.
 type PluginInfo struct {
+	// Plugin name. Must not be empty.
 	Name string
+
+	// Sorting prioritiy. Within the same priority plugins are sorted by name.
+	Priority int
 
 	// New returns a new instance of the plugin.
 	New func() (Plugin, error)

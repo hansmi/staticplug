@@ -19,6 +19,7 @@ type fakeCalculator interface {
 
 type fakePlugin struct {
 	name string
+	prio int
 	inst Plugin
 }
 
@@ -26,7 +27,8 @@ var _ Plugin = (*fakePlugin)(nil)
 
 func (p *fakePlugin) PluginInfo() PluginInfo {
 	return PluginInfo{
-		Name: p.name,
+		Name:     p.name,
+		Priority: p.prio,
 		New: func() (Plugin, error) {
 			if p.inst == nil {
 				return &fakePlugin{}, nil
@@ -129,6 +131,20 @@ func TestRegistryRegister(t *testing.T) {
 				name: "another",
 			},
 			wantNames: []string{"another", "first", "second"},
+		},
+		{
+			name: "priority",
+			reg: func() *Registry {
+				r := NewRegistry()
+				r.MustRegister(&fakePlugin{name: "hundred", prio: 100})
+				r.MustRegister(&fakePlugin{name: "twenty", prio: 20})
+				r.MustRegister(&fakePlugin{name: "minus", prio: -1})
+				return r
+			}(),
+			p: &fakePlugin{
+				name: "another",
+			},
+			wantNames: []string{"minus", "another", "twenty", "hundred"},
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
