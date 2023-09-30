@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 	"sync"
 
 	"golang.org/x/exp/slices"
@@ -59,12 +60,15 @@ func (r *Registry) Register(p Plugin) error {
 	r.plugins = append(r.plugins, rp)
 	r.byName[info.Name] = rp
 
-	slices.SortStableFunc(r.plugins, func(a, b *registeredPlugin) bool {
-		if a.info.Priority != b.info.Priority {
-			return a.info.Priority < b.info.Priority
+	slices.SortStableFunc(r.plugins, func(a, b *registeredPlugin) int {
+		// TODO: Switch to cmp.Compare.
+		if a.info.Priority < b.info.Priority {
+			return -1
+		} else if a.info.Priority > b.info.Priority {
+			return +1
 		}
 
-		return a.info.Name < b.info.Name
+		return strings.Compare(a.info.Name, b.info.Name)
 	})
 
 	return nil

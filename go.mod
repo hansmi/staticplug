@@ -4,5 +4,5 @@ go 1.19
 
 require (
 	github.com/google/go-cmp v0.5.9
-	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 )
