@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"slices"
 	"strings"
 	"sync"
-
-	"golang.org/x/exp/slices"
 )
 
 type registeredPlugin struct {
